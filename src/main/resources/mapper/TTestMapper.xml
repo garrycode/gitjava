@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.garry.java.ssm.dao.testdao.TTestMapper" >
+  <resultMap id="BaseResultMap" type="com.garry.java.ssm.domain.po.testpo.TTest" >
+    <result column="TEST_NAME" property="testName" jdbcType="VARCHAR" />
+    <result column="TEST_MODULE" property="testModule" jdbcType="VARCHAR" />
+    <result column="TEST_CODE" property="testCode" jdbcType="VARCHAR" />
+    <result column="TEST_STATUS" property="testStatus" jdbcType="CHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="sqlAll">
+  TEST_NAME, TEST_MODULE, TEST_CODE, TEST_STATUS, CREATE_TIME
+  </sql>
+  <insert id="insert" parameterType="com.garry.java.ssm.domain.po.testpo.TTest" >
+    insert into T_TEST (TEST_NAME, TEST_MODULE, TEST_CODE, 
+      TEST_STATUS, CREATE_TIME)
+    values (#{testName,jdbcType=VARCHAR}, #{testModule,jdbcType=VARCHAR}, #{testCode,jdbcType=VARCHAR}, 
+      #{testStatus,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.garry.java.ssm.domain.po.testpo.TTest" >
+    insert into T_TEST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="testName != null" >
+        TEST_NAME,
+      </if>
+      <if test="testModule != null" >
+        TEST_MODULE,
+      </if>
+      <if test="testCode != null" >
+        TEST_CODE,
+      </if>
+      <if test="testStatus != null" >
+        TEST_STATUS,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="testName != null" >
+        #{testName,jdbcType=VARCHAR},
+      </if>
+      <if test="testModule != null" >
+        #{testModule,jdbcType=VARCHAR},
+      </if>
+      <if test="testCode != null" >
+        #{testCode,jdbcType=VARCHAR},
+      </if>
+      <if test="testStatus != null" >
+        #{testStatus,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="findByTestCode" parameterType="string" resultMap="BaseResultMap">
+  	SELECT 
+  	<include refid="sqlAll"></include>
+  	FROM T_TEST T
+  	WHERE T.TEST_CODE=#{testCode,jdbcType=VARCHAR}
+  </select>
+  <select id="findTestList" parameterType="string" resultMap="BaseResultMap">
+  SELECT 
+  	<include refid="sqlAll"></include>
+  	FROM T_TEST T
+  	WHERE T.TEST_NAME LIKE '%'||#{testName,jdbcType=VARCHAR}||'%'
+  </select>
+  <delete id="deleteByTestCode" parameterType="string">
+  	DELETE FROM T_TEST T WHERE T.TEST_CODE=#{testCode,jdbcType=VARCHAR}
+  </delete>
+  <update id="updateByTestCode" parameterType="string">
+  	UPDATE T_TEST T
+  	<set>
+  		T.TEST_STATUS='01'
+  	</set>
+  	WHERE T.TEST_CODE=#{testCode,jdbcType=VARCHAR}
+  </update>
+  <update id="batchUpdateByList">
+  UPDATE T_TEST T
+  	<set>
+  		T.TEST_STATUS='00'
+  	</set>
+  	WHERE T.TEST_CODE IN
+  <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item.testCode,jdbcType=VARCHAR}
+		</foreach>
+  </update>
+</mapper>

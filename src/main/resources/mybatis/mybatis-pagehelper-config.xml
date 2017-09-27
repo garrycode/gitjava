@@ -4,9 +4,9 @@
 <configuration>
 
 	<!-- 注册typeHandler, 处理表示Money的字段 -->
-	<typeHandlers>
+	<!-- <typeHandlers>
 		<typeHandler handler="org.tradecore.common.typehandler.MoneyTypeHandler" />
-	</typeHandlers>
+	</typeHandlers> -->
 
 	<plugins>
 		<!-- 分页查询插件 -->
